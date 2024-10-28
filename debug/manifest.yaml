@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: pod
+metadata:
+  name: debug
+  namespace: expense
+spec:
+  container:  # equivalent to docker run -d --name nginx nginx
+  - name: debug
+    image: skkumari6669/debug:v1  #nginx:stable-perl in case of version change
+
+
