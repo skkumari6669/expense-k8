@@ -40,7 +40,7 @@ spec:
     app: mysql
     project: expense
   ports:
-  - name: nginx-svc-port
+  - name: mysql-port
     protocol: TCP
-    port: 80 # service port
-    targetPort: 80 # container port
+    port: 3306 # service port
+    targetPort: 3306 # container port
