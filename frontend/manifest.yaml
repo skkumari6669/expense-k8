@@ -29,6 +29,13 @@ spec:
       containers:
       - name: frontend
         image: skkumari6669/frontend:v1
+        resources: 
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 100m
+            memory: 128Mi 
 ---
 kind: Service
 apiVersion: v1
@@ -46,3 +53,18 @@ spec:
     port: 80 # service port
     targetPort: 80 # container port
 
+------
+
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: frontend
+  namespace: expense
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: frontend
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 15 #usually 75% in real env
