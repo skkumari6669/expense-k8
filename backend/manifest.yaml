@@ -35,6 +35,10 @@ spec:
         tier: app
         project: expense
     spec:
+      initContainers:
+      - name: mysql-check
+        image: busybox:1.28
+        command: ['sh', '-c', "until nslookup mysql; do echo waiting for myservice; sleep 2; done"]
       containers:
       - name: backend
         image: skkumari6669/backend:v1
@@ -48,6 +52,17 @@ spec:
         envFrom:
         - configMapRef:
           name: backend
+        readinessProbe:
+          tcpSocket:
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          initialDe0laySeconds: 3  # it will wait for 15sec after that starts checking health checks
+          periodSeconds: 3  
 ---
 kind: Service
 apiVersion: v1
@@ -80,4 +95,3 @@ spec:
   minReplicas: 1
   maxReplicas: 10
   targetCPUUtilizationPercentage: 15 #usually 75% in real env
-
